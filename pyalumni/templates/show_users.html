@@ -1,0 +1,48 @@
+{% extends "images.html" %}
+{% block images %}
+<div class="container">
+  <h4>{{ student.first|title }} {{ student.last|title }}</h4>
+  <div class="row">
+    <div style="background-color:white" class="col-sm-4">
+      <!-- The Gallery as inline carousel, can be positioned anywhere on the page -->
+      <div id="blueimp-gallery-carousel" class="blueimp-gallery blueimp-gallery-carousel">
+          <div class="slides"></div>
+          <h3 class="title"></h3>
+          <a class="prev">‹</a>
+          <a class="next">›</a>
+          <a class="play-pause"></a>
+          <ol class="indicator"></ol>
+      </div>
+      <div id="links">
+        {% if images %}
+          {% for image in images %}
+            {% set imageurl = 'https://pyalumni.dunlops.us/static/images/students/%s/%s' % (id,image) %}
+            <a href="{{ imageurl }}"></a>
+          {% endfor %}
+        {% else %}
+          <a href="https://pyalumni.dunlops.us/static/images/students/blank.png"></a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-sm-8">
+      <div class="row">
+        <div class="col-sm-12">Name: {{ student.firstname | title }} {{ student.lastname | title }}</div>
+        <div class="col-sm-12">Birthday: {{ student.birthday }}</div>
+        <div class="col-sm-12">Email address: {{ student.email }}</div>
+        <div class="col-sm-12">Class Year: {{ student.year }}</div>
+        <div class="col-sm-12">Birthday: {{ student.birthday }}</div>
+        <div class="col-sm-12">Kids: {{ student.kids }}</div>
+        <div class="col-sm-12">Location: {{ student.location }}</div>
+        <div class="col-sm-12">Obit: {{ student.obit }}</div>
+        <div class="col-sm-12">Business website: {{ student.businesswebsite }}</div>
+        <div class="col-sm-12">Photo site: {{ student.photosite }}</div>
+        <div class="col-sm-12">Website: {{ student.website }}</div>
+        <div class="col-sm-12">Spouse: {{ student.spouse }}</div>
+        <div class="col-sm-12">Bio: {{ student.bio }}</div>
+        <div class="col-sm-12">Employer: {{ student.employer }} </div>
+        <div class="col-sm-12">Class Year: {{ student.class_year }} </div>
+      </div>
+    </div>
+</div>
+
+{% endblock %}

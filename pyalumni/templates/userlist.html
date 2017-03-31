@@ -1,0 +1,77 @@
+{% extends "bootstrap.html" %}
+{% block bootstrap %}
+    <div class="container">
+        <div id="toolbar">
+			<button id="createbutton" class="btn btn-default">Create User</button>
+            <button id="deletebutton" class="btn btn-default">Delete</button>
+            <button id="editbutton" class="btn btn-default">Edit</button>
+            <button id="latchbutton" class="btn btn-default">Tie user to student</button>
+        </div>
+        <table id="table"
+               data-toolbar="#toolbar"
+               data-height="460"
+			   data-search="true"
+			   data-click-to-select="true"
+			   data-pagination="true">
+            <thead>
+            <tr>
+				<th data-field="state" data-checkbox="true"></th>
+                <th data-field="email">Email</th>
+                <th data-field="admin">Admin</th>
+                <th data-field="authenticated">Authenticated</th>
+            </tr>
+            </thead>
+        </table>
+</div>
+<script>
+    var $table = $('#table'),
+        $createbutton = $('#createbutton');
+        $deletebutton = $('#deletebutton');
+        $editbutton = $('#editbutton');
+        $latchbutton = $('#latchbutton');
+		$arr = [];
+
+    $(function () {
+        $('#table').bootstrapTable({
+            data: {{ users|tojson}}
+        });
+    });
+
+    $(function () {
+        $createbutton.click(function () {
+            var $newvar=JSON.stringify($table.bootstrapTable('getAllSelections'));
+            $.each(JSON.parse($newvar), function(idx, obj) {
+            $arr.push(obj.id);
+        });
+            var newarray = 'https://pyalumni.dunlops.us/user/edit' + $arr.join();
+            window.location.replace(newarray)
+        });
+        $editbutton.click(function () {
+            var $newvar=JSON.stringify($table.bootstrapTable('getAllSelections'));
+			$.each(JSON.parse($newvar), function(idx, obj) {
+			$arr.push(obj.id);
+		});
+			var newarray = 'https://pyalumni.dunlops.us/user/edit?id=' + $arr.join();
+			window.location.replace(newarray)
+        });
+
+        $latchbutton.click(function () {
+            var $newvar=JSON.stringify($table.bootstrapTable('getAllSelections'));
+            $.each(JSON.parse($newvar), function(idx, obj) {
+            $arr.push(obj.id);
+        });
+			var newarray = 'https://pyalumni.dunlops.us/pick?id=' + $arr.join();
+			window.location.replace(newarray)
+        });
+
+        $deletebutton.click(function () {
+            var $newvar=JSON.stringify($table.bootstrapTable('getAllSelections'));
+            $.each(JSON.parse($newvar), function(idx, obj) {
+            $arr.push(obj.id);
+        });
+			var newarray = 'https://pyalumni.dunlops.us/user/delete?id=' + $arr.join();
+			window.location.replace(newarray)
+        });
+    });
+</script>
+{% endblock %}

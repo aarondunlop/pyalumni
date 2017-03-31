@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Dusteralumni.org</title>
+
+   <!--  <link rel="stylesheet" href="/static/css/custom.css"> -->
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/bootstrap-table/dist/bootstrap-table.css">
+	<link rel="stylesheet" href="/static/blueimp/css/blueimp-gallery.min.css">
+
+    <script src="/static/js/jquery-3.1.1.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"</script>
+    <script src="/static/bootstrap-table/dist/bootstrap-table.min.js"</script>
+    <script src="/static/bootstrap-table/dist/bootstrap-table.js"></script>
+
+  {% block head_extras %}{% endblock %}
+  </head>
+  <body>
+      <div class="container-fluid">
+      <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link pl-0" href="/">Home <span class="sr-only">Home</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/classes">Highschool Classes</a>
+            </li>
+          </ul>
+        </div>
+          <a href="/" class="navbar-brand mr-0">Dusteralumni.org</a>
+          <div class="navbar-collapse collapse dual-nav">
+            <ul class="nav navbar-nav ml-auto">
+              {% if current_user.is_authenticated %}
+                <li class="nav-item"><a class="nav-link" href="/user">Manage Users</a></li>
+                <li class="nav-item"><a class="nav-link" href="/student">Manage Students</a></li>
+                <li class="nav-item"><a class="nav-link" href="/upload/student">Upload Students</a></li>
+              {% endif %}
+              {% if current_user.is_authenticated %}
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+              {% else %}
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Register</a></li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </nav>
+	</div>
+    <hr>
+    {% block content %}{% endblock %}
+  </body>
+</html>

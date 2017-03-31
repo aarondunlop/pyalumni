@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container">
+<div class="col-xs-12 col-sm-2">
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Class Year</th>
+    </tr>
+  </thead>
+  <tbody>
+      {% for year_row in years | batch(8, None) %}
+        <tr>
+          {% for year in year_row | sort %}
+            {% if year != None %}
+              <td><a href="classes/{{ year }}" data-gallery>{{ year }}</a></td>
+            {%endif %}
+          {% endfor %}
+        </tr>
+      {% endfor %}
+  </tbody>
+  </table>
+</div>
+</div>
+{% endblock %}

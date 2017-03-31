@@ -1,0 +1,19 @@
+{% extends "child_form.html" %}
+{% block form %}
+{% from "_formhelpers.html" import render_field %}
+<form action="{{ url_for('change_image', id=id) }}" method="post" class="form">
+  {% if form.image %}
+    {% for image in form.image %}
+      {% set imageurl = 'https://pyalumni.dunlops.us/static/images/students/%s/%s' % (id,image.data) %}
+      <tr>
+        <td><img src="{{imageurl}}"></img></td>
+        <td>{{ render_field(image) }}</td>
+      </tr>
+    {% endfor %}
+  {% else %}
+    <a href="https://pyalumni.dunlops.us/static/images/students/blank.png"></a>
+  {% endif %}
+  {{ render_field(form.setphoto) }}
+  {{ render_field(form.deletephoto) }}
+</form>
+{% endblock %}

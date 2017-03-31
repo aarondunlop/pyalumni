@@ -1,0 +1,69 @@
+{% extends "bootstrap.html" %}
+{% block bootstrap %}
+    <div class="container">
+        <div id="toolbar">
+            <button id="createbutton" class="btn btn-default">Create User</button>
+            <button id="deletebutton" class="btn btn-default">Delete</button>
+            <button id="editbutton" class="btn btn-default">Edit</button>
+        </div>
+        <table id="table"
+               data-toolbar="#toolbar"
+               data-height="460"
+			   data-search="true"
+			   data-click-to-select="true"
+			   data-pagination="true">
+            <thead>
+            <tr>
+				<th data-field="state" data-checkbox="true"></th>
+                <th data-field="id">Student ID</th>
+                <th data-field="name">Name</th>
+                <th data-field="year">Year</th>
+            </tr>
+            </thead>
+        </table>
+</div>
+<script>
+    var $table = $('#table'),
+        $button = $('#createbutton');
+        $deletebutton = $('#deletebutton');
+        $editbutton = $('#editbutton');
+		$arr = [];
+
+    $(function () {
+        $('#table').bootstrapTable({
+            data: {{ students|tojson}}
+        });
+    });
+
+    $(function () {
+        $editbutton.click(function () {
+            var $newvar=JSON.stringify($table.bootstrapTable('getAllSelections'));
+            $.each(JSON.parse($newvar), function(idx, obj) {
+            $arr.push(obj.id);
+        });
+            var newarray = 'https://pyalumni.dunlops.us/student/edit?id=' + $arr.join();
+            window.location.replace(newarray)
+        });
+
+        $deletebutton.click(function () {
+            var $newvar=JSON.stringify($table.bootstrapTable('getAllSelections'));
+            $.each(JSON.parse($newvar), function(idx, obj) {
+            $arr.push(obj.id);
+        });
+            var newarray = 'https://pyalumni.dunlops.us/student/delete?id=' + $arr.join();
+            window.location.replace(newarray)
+        });
+    });
+
+    $(function () {
+        $button.click(function () {
+            var $newvar=JSON.stringify($table.bootstrapTable('getAllSelections'));
+			$.each(JSON.parse($newvar), function(idx, obj) {
+			$arr.push(obj.id);
+		});
+	var newarray = 'https://pyalumni.dunlops.us/student/edit?id=' + $arr.join();
+	window.location.replace(newarray)
+        });
+    });
+</script>
+{% endblock %}

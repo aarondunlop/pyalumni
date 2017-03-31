@@ -1,0 +1,11 @@
+{% extends "child_form.html" %}
+{% block form %}
+{% from "_formhelpers.html" import render_field %}
+{{ email }}
+<form action="{{ url_for('pickstudent', id=id) }}" method="post" class="form">
+  <dl>
+    {{ render_field(form.students) }}
+  </dl>
+  <p><input type=submit value=Save>
+</form>
+{% endblock %}
