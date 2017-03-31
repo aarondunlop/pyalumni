@@ -265,6 +265,7 @@ def usercreate():
         record = db_session.query(User).filter_by(email=form.email.data).first()
         if record:
             error.append('User already exists.')
+            print('record already exists.')
         else:
             record = User()
             db_session.add(record)
