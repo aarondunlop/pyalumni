@@ -313,15 +313,13 @@ def studentedit():
 def studentcreate():
     form = StudentEditForm()
 
-    if request.method == 'GET':
-        return render_template('studentedit.html', form=form, error=error)
-
     if request.method == 'POST' and form.validate():
         record = Student()
         db_session.add(record)
         form.populate_obj(record)
         db_session.commit()
-    return redirect(url_for('studentedit'))
+    return render_template('studentcreate.html', form=form, error=error)
+
 
 @app.route('/user/pass/<int:id>', methods=['GET', 'POST'])
 @login_required
