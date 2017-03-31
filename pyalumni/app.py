@@ -311,6 +311,7 @@ def studentedit():
 @login_required
 @check_admin
 def studentcreate():
+    id=None
     form = StudentEditForm()
 
     if request.method == 'GET':
