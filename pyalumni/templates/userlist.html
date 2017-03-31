@@ -43,7 +43,7 @@
             $.each(JSON.parse($newvar), function(idx, obj) {
             $arr.push(obj.id);
         });
-            var newarray = 'https://pyalumni.dunlops.us/user/edit' + $arr.join();
+            var newarray = 'https://pyalumni.dunlops.us/user/create' + $arr.join();
             window.location.replace(newarray)
         });
         $editbutton.click(function () {

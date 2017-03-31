@@ -24,7 +24,7 @@
 </div>
 <script>
     var $table = $('#table'),
-        $button = $('#createbutton');
+        $createbutton = $('#createbutton');
         $deletebutton = $('#deletebutton');
         $editbutton = $('#editbutton');
 		$arr = [];
@@ -44,7 +44,8 @@
             var newarray = 'https://pyalumni.dunlops.us/student/edit?id=' + $arr.join();
             window.location.replace(newarray)
         });
-
+    });
+    $(function () {
         $deletebutton.click(function () {
             var $newvar=JSON.stringify($table.bootstrapTable('getAllSelections'));
             $.each(JSON.parse($newvar), function(idx, obj) {
@@ -56,7 +57,7 @@
     });
 
     $(function () {
-        $button.click(function () {
+        $createbutton.click(function () {
             var $newvar=JSON.stringify($table.bootstrapTable('getAllSelections'));
 			$.each(JSON.parse($newvar), function(idx, obj) {
 			$arr.push(obj.id);
