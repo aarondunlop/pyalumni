@@ -311,21 +311,16 @@ def studentedit():
 @login_required
 @check_admin
 def studentcreate():
-    id=None
     form = StudentEditForm()
 
     if request.method == 'GET':
         return render_template('studentedit.html', form=form, error=error)
 
     if request.method == 'POST' and form.validate():
-        record = db_session.query(Student).filter_by(email=form.email.data).first()
-        if record:
-            error.append('Student already exists.')
-        else:
-            record = Student()
-            db_session.add(record)
-            form.populate_obj(record)
-            db_session.commit()
+        record = Student()
+        db_session.add(record)
+        form.populate_obj(record)
+        db_session.commit()
     return redirect(url_for('studentedit'))
 
 @app.route('/user/pass/<int:id>', methods=['GET', 'POST'])
