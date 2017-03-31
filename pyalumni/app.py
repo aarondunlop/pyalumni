@@ -252,27 +252,6 @@ def useredit():
         else:
             return redirect(url_for('useredit', error=error, id=",".join(opt)))
 
-@app.route('/user/create', methods=['GET', 'POST'])
-@login_required
-@check_admin
-def usercreate():
-    form = UserEditForm()
-
-    if request.method == 'GET':
-        return render_template('useredit.html', form=form, error=error)
-
-    if request.method == 'POST' and form.validate():
-        record = db_session.query(User).filter_by(email=form.email.data).first()
-        if record:
-            error.append('User already exists.')
-            print('record already exists.')
-        else:
-            record = User()
-            db_session.add(record)
-            form.populate_obj(record)
-            db_session.commit()
-    return redirect(url_for('useredit'))
-
 @app.route('/student/edit', methods=['GET', 'POST'])
 @login_required
 @check_admin
