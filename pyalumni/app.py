@@ -255,7 +255,7 @@ def useredit():
 @app.route('/user/create', methods=['GET', 'POST'])
 @login_required
 @check_admin
-def studentcreate():
+def usercreate():
     form = UserEditForm()
 
     if request.method == 'GET':
