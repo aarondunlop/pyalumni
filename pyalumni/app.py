@@ -134,7 +134,7 @@ def login():
     if request.method == 'POST':
         #try:
             q = db_session.query(User).filter_by(email=form.email.data).first()
-]            if q.email_confirmed:
+            if q.email_confirmed:
                 q.session_token = s.sign(str(q.id))
                 db_session.commit()
                 ph.verify(q.password, form.password.data)
