@@ -1,7 +1,6 @@
 {% extends "child_form.html" %}
 {% block form %}
 {% from "_formhelpers.html" import render_field %}
-{{ id }}
 <form action="{{ url_for('studentcreate') }}" method="post" class="form">
   <dl>
     {{ render_field(form.firstname) }}
