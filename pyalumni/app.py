@@ -208,8 +208,6 @@ def useredit():
     id=None
     form = UserEditForm(request.form)
 
-    #print(current_user)
-
     try:
         opt = request.args.get('id').split(",")
         id=next(iter(opt))
@@ -309,6 +307,25 @@ def studentedit():
         else:
             return redirect(url_for('studentedit', id=",".join(opt)))
 
+@app.route('/student/create', methods=['GET', 'POST'])
+@login_required
+@check_admin
+def studentcreate():
+    form = StudentEditForm()
+
+    if request.method == 'GET':
+        return render_template('studentedit.html', form=form, error=error)
+
+    if request.method == 'POST' and form.validate():
+        record = db_session.query(Student).filter_by(email=form.email.data).first()
+        if record:
+            error.append('User already exists.')
+        else:
+            record = Student()
+            db_session.add(record)
+            form.populate_obj(record)
+            db_session.commit()
+    return redirect(url_for('studentedit'))
 
 @app.route('/user/pass/<int:id>', methods=['GET', 'POST'])
 @login_required
