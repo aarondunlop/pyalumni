@@ -62,7 +62,6 @@ def unauthorized():
 def check_admin(view):
     @functools.wraps(view)
     def inner(*args, **kwargs):
-        print('checking admin.')
         if current_user.admin:
             return view(*args, **kwargs)
         else:
@@ -71,7 +70,6 @@ def check_admin(view):
     return inner
 
 def check_user_or_admin(id, current_user):
-    #print(id, current_user, current_user.email)
     try:
         user=db_session.query(User).filter_by(id=id, email=current_user.email).first()
         if user or current_user.admin:
@@ -133,18 +131,17 @@ def login():
     next = get_redirect_target()
     form = UserLoginForm(request.form)
     ph = PasswordHasher()
-    if request.method == 'POST':# and form.validate():
+    if request.method == 'POST':
         #try:
             q = db_session.query(User).filter_by(email=form.email.data).first()
-            #print(form.email.data, form.password.data, q.email_confirmed)
-            if q.email_confirmed:
+]            if q.email_confirmed:
                 q.session_token = s.sign(str(q.id))
                 db_session.commit()
                 ph.verify(q.password, form.password.data)
             login_user(q, remember=True)
             return redirect_back('index')
         #except:
-            print('Email or password does not match. Try again.')
+            #print('Email or password does not match. Try again.')
 
     return render_template('login.html', form=form, error=error)
 
@@ -162,8 +159,6 @@ def userlist():
     if request.method == 'GET':
         values=['email', 'admin', 'id']
         users = db_session.query(User.email, User.admin, User.id).all()#(User.email, User.id)
-        for user in users:
-            print user
         resultset = [dict(zip(values, row)) for row in users]
     return render_template('userlist.html', users=resultset)
 
@@ -241,7 +236,6 @@ def useredit():
         #Insert check here for admin, or to verify user is editing his acct.
         if record:
             form.populate_obj(record)
-            print record.admin
         else:
             record = User()
             db_session.add(record)
@@ -290,7 +284,6 @@ def studentedit():
         return render_template('studentedit.html', form=form, error=error, id=",".join(opt))
 
     if request.method == 'POST' and form.validate():
-        print(record, id)
 
         #Insert check here for admin, or to verify student is editing his acct.
         if record:
@@ -344,11 +337,9 @@ def pickstudent():
         except:
             return True
         if opt is None or not opt:
-            print('opt is empty')
             return True
         return False
 
-    #print(request.args)
     opt=[]
     error=[]
     year=None
@@ -369,7 +360,6 @@ def pickstudent():
                 return redirect(url_for('index'))
     except:
         error.append('User does not exist.')
-        print(error)
         if exit_if_last(id, opt):
             return redirect(url_for('index'))
 
@@ -389,16 +379,12 @@ def pickstudent():
         return redirect(url_for('pickstudent', error=error, id=",".join(opt)))
 
     if request.method == 'GET':
-        print(id, opt, user)
         return render_template('pickstudent.html', form=form, id=",".join(opt), email=user.email)
 
     if request.method == 'POST': # and form.validate():
         studentid=int(form.students.data)
-        print('studentid is %s' % studentid)
         #choice can be 0. none maybe?
         if studentid == -1:
-            print('new record is being created %s' % form.students.data)
-            print('dumping out.')
             return redirect(url_for('studentedit'))
 
         studentid=form.students.data
@@ -409,32 +395,9 @@ def pickstudent():
         db_session.commit()
         #Check to see if done, redirect to studentedit if so. Else, back to tie. This works.
         if exit_if_last(id, opt):
-            print('Last record, exiting.')
             return redirect(url_for('index'))
 
     return redirect(url_for('pickstudent', error=error, id=",".join(opt)))
-
-#@app.route('/user/list')
-#def userjson():
-#    values=['email', 'id']
-#    users = db_session.query(User.email, User.id).all()#(User.email, User.id)
-#    resultset = [dict(zip(values, row)) for row in users]
-#    return(json.dumps(resultset))
-#
-#@app.route('/student/list')
-#def studentjson():
-#    values=['email', 'id']
-#    students = db_session.query(Student.name, Student.id).all()
-#    resultset = [dict(zip(values, row)) for row in students]
-#    return(json.dumps(resultset))
-
-@app.route('/secret', methods=['GET'])
-@login_required
-@check_admin
-def secret():
-    print('ok')
-    return('ok')
-    #return 'This is a secret page. You are logged in as {}'.format(current_user.username)
 
 @app.route('/user/confirm/<token>')
 def confirm_email(token):
@@ -477,7 +440,6 @@ def register():
             html = render_template(
                 'email/activate.html',
                 confirm_url=confirm_url)
-            #print(html)
             email = SendEmail(to=user.email, subject=subject)
             email.html(html)
             email.send()
@@ -486,7 +448,7 @@ def register():
 
     except Exception as e:
         #return(str(e))
-        print('whoops.')
+        print('Could not register User.')
 
     return render_template('register.html', form=form, error=error)
 
@@ -535,13 +497,11 @@ def show_user(selected_year, name):
 @app.route('/upload/<int:id>', methods=['GET', 'POST'])
 @login_required
 def uploaded_file(id):
-    student = db_session.query(Student).filter_by(id=id).first()#(Student.email, Student.id)
-    user = db_session.query(User).filter_by(email=current_user.email).first()#(Student.email, Student.id)
-    #print ('student.userid is %s, cu is %s, user.id is %s' % (student.userid, current_user, user.id))
+    student = db_session.query(Student).filter_by(id=id).first()
+    user = db_session.query(User).filter_by(email=current_user.email).first()
     if user.id == student.userid or user.is_admin:
         print (id, student.id, student.userid, current_user.id, current_user.admin)
     else:
-        print('does not match.')
         return redirect(url_for('index'))
 
     if request.method == 'POST':
@@ -558,10 +518,7 @@ def uploaded_file(id):
         if file and allowed_file(file.filename):
             filepath = app.config['UPLOAD_FOLDER'] + '/' + str(id) + '/'
             filename = secure_filename(file.filename)
-            print student
-            print student.images
             imagepath=filepath + filename
-            print imagepath
             try:
                 os.stat(filepath)
             except:
@@ -578,10 +535,8 @@ def change_image(id):
     user = db_session.query(User).filter_by(email=current_user.email).first()#(Student.email, Student.id)
 
     if user.id == student.userid or user.is_admin:
-        #print (id, student.id, student.userid, current_user.id, current_user.admin)
         a=None
     else:
-        print('does not match.')
         return redirect(url_for('index'))
     filepath='%s/%s' % ('/var/www/pyalumni/app/static/images/students', id)
 
@@ -590,7 +545,6 @@ def change_image(id):
         if images is not None:
             form = StudentChangeImage(images=images)
             form.image.choices = [(image, image) for image in images]
-            #print(list(form.image.choices))
         else:
             form = StudentChangeImage()
     else:
@@ -598,22 +552,18 @@ def change_image(id):
         #except:
             #return redirect(url_for('index'))
     if request.method == 'POST':
-            print student.images
-            print student.id
             #print 'ok'
             form = StudentChangeImage(request.form)
 
             if form.deletephoto.data:
                 imagename=form.image.data
                 imagepath="/".join([filepath, imagename])
-                print imagepath
                 try:
                     os.remove(imagepath)
                 except OSError:
                     pass
 
             if form.setphoto.data:
-                print form.image.data
                 student.images=form.image.data
                 db_session.commit()
 
@@ -667,32 +617,25 @@ def upload_images():
                 fullimageyear=int(imageyear)+2000
             else:
                 fullimageyear=0
-            #print fullimageyear
             dirpath='/'.join([filedir, imageyear])
             images = [ file for file in os.listdir(dirpath) ]
             name=''
             for image in images:
-                #print image
                 match = re.match(r"(.*)\..*\..*", image)
-                #print match.group(1)
                 if match is not None:
                     name=match.group(1)
-                    print name
                 fullpath='%s/%s' % (dirpath, image)
-                #print fullpath
                 for student in students:
                     if student.class_year==fullimageyear and student.name == name:
                         newpath='%s/%s' % ('/var/www/pyalumni/app/static/images/students', student.id)
                         newimg='%s/%s' % (newpath, image)
                         if not os.path.exists(newpath):
                             os.makedirs(newpath)
-                        #print(newpath)
                         if not os.path.exists(newimg):
                             shutil.copy(fullpath, newimg)
                         showname='%s.old.jpg' % (name)
                         if showname is not None:
                             student.images=showname
-                            #print(fullpath, newpath)
         db_session.commit()
 
     return render_template('upload_images.html')
