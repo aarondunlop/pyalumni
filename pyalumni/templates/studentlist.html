@@ -62,7 +62,7 @@
 			$.each(JSON.parse($newvar), function(idx, obj) {
 			$arr.push(obj.id);
 		});
-	var newarray = 'https://pyalumni.dunlops.us/student/edit?id=' + $arr.join();
+	var newarray = 'https://pyalumni.dunlops.us/student/create' + $arr.join();
 	window.location.replace(newarray)
         });
     });
