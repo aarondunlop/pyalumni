@@ -320,7 +320,7 @@ def studentcreate():
     if request.method == 'POST' and form.validate():
         record = db_session.query(Student).filter_by(email=form.email.data).first()
         if record:
-            error.append('User already exists.')
+            error.append('Student already exists.')
         else:
             record = Student()
             db_session.add(record)
