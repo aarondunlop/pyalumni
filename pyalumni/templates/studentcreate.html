@@ -2,7 +2,7 @@
 {% block form %}
 {% from "_formhelpers.html" import render_field %}
 {{ id }}
-<form action="{{ url_for('studentedit') }}" method="post" class="form">
+<form action="{{ url_for('studentcreate') }}" method="post" class="form">
   <dl>
     {{ render_field(form.firstname) }}
     {{ render_field(form.lastname) }}
